@@ -10,7 +10,6 @@ The goal of this prompt is to extract only explicitly stated cybersecurity facts
 
 The model must return valid JSON only, using the following schema:
 
-```json
 {
   "publication_date": null,
   "cve": null,
@@ -22,7 +21,6 @@ The model must return valid JSON only, using the following schema:
   "patching_link": null
 }
 
-```
 ## Initial Prompt
 
 ```text
@@ -33,14 +31,14 @@ Task: Fetch the article URL provided below.
 Return only a JSON object in the following schema:
 
 {
-  "publication_date": "...",
-  "cve": "...",
-  "asset_type": "...",
-  "Product_affected": "...",
-  "Product_affected_versions": "...",
-  "mitigation_recommend_version": "...",
-  "patching_link": "...",
-  "iocs": []
+  "publication_date": null,
+  "cve": null,
+  "asset_type": null,
+  "iocs": [],
+  "Product_affected": null,
+  "Product_affected_versions": [],
+  "mitigation_recommend_version": null,
+  "patching_link": null
 }
 
 Rules:
