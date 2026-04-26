@@ -11,7 +11,7 @@ Cyber Threat Intelligence reports are often published as unstructured prose — 
 - **Structured extraction** – Prompts that reliably produce valid JSON objects covering indicators of compromise (IoCs), threat actors, TTPs (MITRE ATT&CK techniques), malware families, and more.
 - **Schema-driven output** – Each prompt targets a well-defined JSON schema so downstream consumers know exactly what fields to expect.
 - **Model-agnostic** – Prompts are written in plain English and work with any capable instruction-following LLM (GPT-4, Claude, Gemini, Mistral, Llama 3, etc.).
-- **Easy to extend** – Add your own prompts or tweak existing ones to match your organisation's data model.
+- **Easy to extend** – Add your own prompts or tweak existing ones to match your organization's data model.
 
 ## Example
 
@@ -93,14 +93,14 @@ Text:
 
 ## Prompts
 
+> **Note:** The `prompts/` directory will be populated in upcoming commits. The table below lists the planned prompts.
+
 | File | Description |
 |------|-------------|
 | `prompts/ioc-extraction.md` | Extract IP addresses, domains, URLs, file hashes, and email addresses |
 | `prompts/ttp-extraction.md` | Map observed behaviours to MITRE ATT&CK technique IDs |
 | `prompts/threat-actor-profile.md` | Build a structured threat-actor profile (aliases, motivation, targets) |
 | `prompts/full-report.md` | Comprehensive extraction combining IoCs, TTPs, actors, and context |
-
-> **Note:** The `prompts/` directory will be populated in upcoming commits. The table above lists the planned prompts.
 
 ## Contributing
 
