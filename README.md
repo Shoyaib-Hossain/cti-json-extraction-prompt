@@ -193,6 +193,7 @@ If no relevant facts can be extracted, return exactly:
   "Product_affected": null,
   "Product_affected_versions": [],
 }
+Article URL:
 ```
 ## Local Asset Validation
 
