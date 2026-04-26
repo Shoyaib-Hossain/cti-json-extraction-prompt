@@ -8,10 +8,6 @@ The prompt is designed for academic and reproducible security analysis, particul
 
 The goal of this prompt is to extract only explicitly stated cybersecurity facts and return them in a fixed JSON schema.
 
-The prompt avoids unsupported inference, guessing, and enrichment. It also enforces strict rules for handling affected product versions, fixed versions, and official patching links.
-
-## Output Schema
-
 The model must return valid JSON only, using the following schema:
 
 ```json
@@ -25,8 +21,40 @@ The model must return valid JSON only, using the following schema:
   "mitigation_recommend_version": null,
   "patching_link": null
 }
-```
 
+```
+## Initial Prompt
+
+```text
+You are a senior Cyber Threat Intelligence analyst.
+
+Task: Fetch the article URL provided below.
+
+Return only a JSON object in the following schema:
+
+{
+  "publication_date": "...",
+  "cve": "...",
+  "asset_type": "...",
+  "Product_affected": "...",
+  "Product_affected_versions": "...",
+  "mitigation_recommend_version": "...",
+  "patching_link": "...",
+  "iocs": []
+}
+
+Rules:
+
+1. Extract only facts explicitly stated in the article or in the relevant crawled pages.
+2. Asset_type refers to the asset or physical device are affected.
+3. For Product_affected_versions give the affected versions. If affected version indicates prior versions of a specific version then search for the prior versions from the official site of the product.
+4. For "mitigation_recommend_version", include ONLY the official fixed version string, return null if official version not found.
+5. For "patching_link", include the exact official vendor patch, update, or security notice URL that explicitly states the fixed version.
+6. If no qualifying official link for "patching_link" is explicitly available in the article or crawled pages, return null.
+7. Use null or empty array for any other scalar field not explicitly stated.
+
+Article URL:
+```
 ## Rationale for the Revised Prompt
 
 The revised prompt was selected because it provides stricter and more reproducible extraction constraints than the initial version.
@@ -179,10 +207,4 @@ If no relevant facts can be extracted, return exactly:
   "mitigation_recommend_version": null,
   "patching_link": null
 }
-```
-
-## Suggested Repository Name
-
-```text
-cti-verifiable-extraction-prompt
 ```
