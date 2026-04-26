@@ -8,19 +8,6 @@ The prompt is designed for academic and reproducible security analysis, particul
 
 The goal of this prompt is to extract only explicitly stated cybersecurity facts and return them in a fixed JSON schema.
 
-The model must return valid JSON only, using the following schema:
-
-{
-  "publication_date": null,
-  "cve": null,
-  "asset_type": null,
-  "iocs": [],
-  "Product_affected": null,
-  "Product_affected_versions": [],
-  "mitigation_recommend_version": null,
-  "patching_link": null
-}
-
 ## Initial Prompt
 
 ```text
