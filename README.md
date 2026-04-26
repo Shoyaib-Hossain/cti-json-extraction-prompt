@@ -71,7 +71,7 @@ Overall, the revised prompt improves precision, reduces unsupported inference, e
 }
 ```
 
-## Final Prompt
+## Revised/Final Prompt
 
 ```text
 You are a cyber threat intelligence extraction engine.
