@@ -1,5 +1,3 @@
-# cti-json-extraction-prompt
-
 # Cyber Threat Intelligence Extraction Prompt
 
 This repository contains a structured prompt for extracting verifiable Cyber Threat Intelligence (CTI) facts from security articles, crawled pages, and official vendor sources.
@@ -27,27 +25,43 @@ The model must return valid JSON only, using the following schema:
   "mitigation_recommend_version": null,
   "patching_link": null
 }
+```
 
-**Rationale for the Revised Prompt
+## Rationale for the Revised Prompt
 
 The revised prompt was selected because it provides stricter and more reproducible extraction constraints than the initial version.
 
-The initial prompt defined the target schema and general extraction requirements, but it did not fully constrain ambiguous version expressions. For example, affected versions expressed as X and prior could be returned directly as a range phrase instead of being resolved through official product version histories. Similarly, mitigation recommendations expressed as X and above or X or later could be returned as fixed versions, even though they are not exact vendor-confirmed remediation versions.
+The initial prompt defined the target schema and general extraction requirements, but it did not fully constrain ambiguous version expressions. For example, affected versions expressed as `X and prior` could be returned directly as a range phrase instead of being resolved through official product version histories. Similarly, mitigation recommendations expressed as `X and above` or `X or later` could be returned as fixed versions, even though they are not exact vendor-confirmed remediation versions.
 
 The revised prompt addresses these issues by adding explicit field-level rules.
 
-For Product_affected_versions, the prompt requires official vendor or product sources to be checked when prior-version ranges are encountered. It also prohibits fabricated or mathematically expanded version lists.
+For `Product_affected_versions`, the prompt requires official vendor or product sources to be checked when prior-version ranges are encountered. It also prohibits fabricated or mathematically expanded version lists.
 
-For mitigation_recommend_version, the prompt requires only an exact official fixed version string. If the recommendation is expressed as above X, newer than X, or X or later, the exact fixed version must be verified from an official vendor or product source. If no exact official fixed version is available, the value must be null.
+For `mitigation_recommend_version`, the prompt requires only an exact official fixed version string. If the recommendation is expressed as `above X`, `newer than X`, or `X or later`, the exact fixed version must be verified from an official vendor or product source. If no exact official fixed version is available, the value must be `null`.
 
-For patching_link, the prompt allows only official vendor URLs that explicitly state the fixed version. Generic vendor pages, third-party blogs, NVD, MITRE, exploit databases, and unrelated news articles are excluded.
+For `patching_link`, the prompt allows only official vendor URLs that explicitly state the fixed version. Generic vendor pages, third-party blogs, NVD, MITRE, exploit databases, and unrelated news articles are excluded.
 
-Overall, the revised prompt improves precision, reduces unsupported inference, enforces source authority, and supports reproducible structured extraction for cyber threat intelligence analysis.**
+Overall, the revised prompt improves precision, reduces unsupported inference, enforces source authority, and supports reproducible structured extraction for cyber threat intelligence analysis.
 
+## Example Empty Output
 
-** Final Prompt**
+```json
+{
+  "publication_date": null,
+  "cve": null,
+  "asset_type": null,
+  "iocs": [],
+  "Product_affected": null,
+  "Product_affected_versions": [],
+  "mitigation_recommend_version": null,
+  "patching_link": null
+}
+```
 
-**You are a cyber threat intelligence extraction engine.
+## Final Prompt
+
+```text
+You are a cyber threat intelligence extraction engine.
 
 Your task is to extract only verifiable facts from the provided article and any relevant crawled pages.
 
@@ -77,7 +91,7 @@ cve:
 
 1. Extract only CVE identifiers explicitly stated in the article or relevant crawled pages.
 2. If one CVE is stated, return it as a string.
-3. If multiple CVEs are stated, return an array of CVE strings in this field.
+3. If multiple CVEs are stated and the schema must remain exact, return an array of CVE strings in this field.
 4. If no CVE is stated, return null.
 
 asset_type:
@@ -129,16 +143,6 @@ patching_link:
 5. If no qualifying official URL is explicitly available in the article or crawled pages, return null.
 6. If mitigation_recommend_version is null, patching_link must also be null unless an official patch page explicitly states a fix but no fixed version string is provided.
 
-GENERAL RULES
-
-1. Extract only facts explicitly stated in the article, relevant crawled pages, or official vendor/product pages used for version verification.
-2. Do not infer, guess or fill gaps using general knowledge.
-3. Use null for missing scalar fields.
-4. Use [] for missing array fields.
-5. Prefer official vendor or product sources when extracting fixed versions, patch links, and version history.
-6. Do not use third-party blogs, news articles, vulnerability databases, mirrors, social media posts, or non-vendor pages for fixed-version or patch-link fields unless they directly link to an official vendor source.
-7. If sources conflict, prefer the official vendor source. If two official sources conflict, use the most recent official source. If the correct value cannot be determined, return null for the disputed scalar field or [] for the disputed array field.
-
 OUTPUT RULES
 
 - Return JSON only.
@@ -150,6 +154,16 @@ OUTPUT RULES
 - Use null for unknown scalar values.
 - Use [] for unknown array values.
 - Do not include explanations, citations, source notes, or reasoning in the output.
+
+GENERAL RULES
+
+1. Extract only facts explicitly stated in the article, relevant crawled pages, or official vendor/product pages used for version verification.
+2. Do not infer, guess or fill gaps using general knowledge.
+3. Use null for missing scalar fields.
+4. Use [] for missing array fields.
+5. Prefer official vendor or product sources when extracting fixed versions, patch links, and version history.
+6. Do not use third-party blogs, news articles, vulnerability databases, mirrors, social media posts, or non-vendor pages for fixed-version or patch-link fields unless they directly link to an official vendor source.
+7. If sources conflict, prefer the official vendor source. If two official sources conflict, use the most recent official source. If the correct value cannot be determined, return null for the disputed scalar field or [] for the disputed array field.
 
 DEFAULT EMPTY OUTPUT
 
@@ -164,5 +178,11 @@ If no relevant facts can be extracted, return exactly:
   "Product_affected_versions": [],
   "mitigation_recommend_version": null,
   "patching_link": null
-}**
+}
+```
 
+## Suggested Repository Name
+
+```text
+cti-verifiable-extraction-prompt
+```
