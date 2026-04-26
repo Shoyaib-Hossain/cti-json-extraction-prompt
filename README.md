@@ -25,7 +25,6 @@ Return only a JSON object in the following schema:
   "Product_affected": null,
   "Product_affected_versions": [],
   "mitigation_recommend_version": null,
-  "patching_link": null
 }
 
 Rules:
@@ -67,9 +66,15 @@ Overall, the revised prompt improves precision, reduces unsupported inference, e
   "Product_affected": null,
   "Product_affected_versions": [],
   "mitigation_recommend_version": null,
-  "patching_link": null
 }
 ```
+## Rationale for Omitting Remediation Fields
+
+The fields mitigation_recommend_version and patching_link are omitted to maintain a strict separation between vulnerability intelligence extraction and remediation execution. The extractor is intended to report verifiable facts from source material, such as CVEs, affected products, affected versions, asset types, and IOCs, but not to prescribe operational changes.
+
+Fixed-version data is often context-dependent across distributions, release branches, package channels, and product editions. Encoding this information in a single field can obscure important constraints or produce misleading null values. Similarly, patching URLs may be interpreted by autonomous workflows as actionable update sources, increasing the risk of incorrect or unauthorized remediation.
+
+This design requires remediation decisions to be made only after local asset validation confirms product presence, installed version, platform context, and exposure conditions. Thus, the schema remains factual, context-neutral, and suitable for CTI enrichment, while patch selection and deployment remain under controlled remediation workflows.
 
 ## Revised/Final Prompt
 
@@ -87,8 +92,6 @@ Return valid JSON only, using the following schema:
   "iocs": [],
   "Product_affected": null,
   "Product_affected_versions": [],
-  "mitigation_recommend_version": null,
-  "patching_link": null
 }
 
 Do not include markdown, commentary, explanations or extra fields in the final output.
@@ -189,7 +192,16 @@ If no relevant facts can be extracted, return exactly:
   "iocs": [],
   "Product_affected": null,
   "Product_affected_versions": [],
-  "mitigation_recommend_version": null,
-  "patching_link": null
 }
 ```
+## Local Asset Validation
+
+The extracted CTI output represents external vulnerability intelligence only. It does not confirm that the local environment is affected.
+
+Before any remediation action is taken, the affected product, version, operating system, asset type, and exposure conditions must be validated against local asset inventory or endpoint telemetry.
+
+External advisories answer: "What is vulnerable?"
+
+Local asset validation answers: "Are we vulnerable?"
+
+The extraction result must not be used as a direct patching instruction. It should be used as structured input for local validation, prioritisation, and approved remediation workflows.
